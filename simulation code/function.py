@@ -82,7 +82,7 @@ def pilot_pi(X, Y, n, alpha=0.5, n0=200, optimality="L", L_case=2):
             L_Sigma_inv_X = X @ L_Sigma_inv
             h = np.abs(eps0) * np.abs(L_Sigma_inv_X)
 
-    gamma0 = np.sum(h[pilot_indices]) / n0
+    gamma0 = np.mean(h[pilot_indices])
     pi_opt = n * h / (N * gamma0)
     pi_alpha = (1 - alpha) * pi_opt + alpha * (n / N)
     pi_tilde = np.minimum(pi_alpha, 1.0)
@@ -106,7 +106,7 @@ def rps(X, Y, n, v_dist):
     elif v_dist == 'pois':
         v = np.random.poisson(1 / pi_n, n_sub)
     elif v_dist == 'geom':
-        p_geom = pi_n / (1 + pi_n)
+        p_geom = pi_n
         v = np.random.geometric(p_geom, n_sub)
     elif v_dist == 'beta':
         v = np.random.uniform(0, 2 / pi_n, n_sub)
