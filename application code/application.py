@@ -57,7 +57,7 @@ def evaluate_exp2(params):
     t1 = time.process_time()
 
     if method == 'Full':
-        beta_sub = beta_full_train
+        beta_sub = ols(X_train, y_train)
     elif method == 'PS':
         beta_sub = repeated_subsample(
             X_train, y_train, n, B, 'ps', alpha=0.4, n0=200, L_case=2)
@@ -144,6 +144,7 @@ def run_exp1():
     y_all = np.log(y_raw + epsilon)
     scaler = StandardScaler()
     X_all = scaler.fit_transform(X_raw)
+    X_all = np.column_stack((np.ones(X_all.shape[0]), X_all))
 
     t_data = time.process_time() - t1
 
@@ -153,7 +154,7 @@ def run_exp1():
 
     n_values = [200, 400, 600, 800, 1000]
     B_values = list(range(1, 11))
-    methods = ['PS', 'RPS', 'Unif', 'Unif-PS']
+    methods = ['PS', 'RPS', 'Unif-PS']
     M = 500
 
     tasks = []
@@ -194,7 +195,7 @@ def run_exp2():
 
     n_values = [200, 400, 600, 800, 1000]
     B_values = list(range(1, 11))
-    methods = ['PS', 'RPS', 'Unif', 'Unif-PS']
+    methods = ['PS', 'RPS', 'Unif-PS']
     M = 500
 
     tasks = []
@@ -206,6 +207,8 @@ def run_exp2():
         scaler = StandardScaler()
         X_train = scaler.fit_transform(X_train_raw)
         X_test = scaler.transform(X_test_raw)
+        X_train = np.column_stack((np.ones(X_train.shape[0]), X_train))
+        X_test = np.column_stack((np.ones(X_test.shape[0]), X_test))
 
         beta_full_train = ols(X_train, y_train)
         tasks.append((run_id, 20000, 1, 'Full', X_train, y_train, X_test, y_test, beta_full_train))
