@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 # configuration
 N = 100000
-M = 200
+M = 500
 L_case = 2
 
 alpha = 0.4
@@ -26,7 +26,7 @@ n_values = [200, 400, 600, 800, 1000]
 B_values = [1, 5, 10, 15, 20]
 ar_values = [0.1, 0.5, 0.9]
 
-methods = ['Full', 'PS', 'RPS', 'Unif', 'Unif-PS']
+methods = ['Full', 'PS', 'RPS', 'Unif-PS']
 
 # 导入函数
 sys.path.append('.')
@@ -68,7 +68,7 @@ def run_simulation(params):
         beta_est = repeated_subsample(
             X, Y, n_val, B_val, 'unif_ps')
 
-    t_algo = time.process_time() - t1
+    t_algo = t_full if method == 'Full' else time.process_time() - t1
 
     # compute MSE
     t1 = time.process_time()
