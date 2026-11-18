@@ -17,7 +17,7 @@ exploration_dir = "exploration_output"
 # configuration
 N = 100000
 n0 = 200
-M = 200
+M = 500
 L_case = 2
 
 alpha_values = np.arange(0, 1.05, 0.05)
@@ -118,6 +118,7 @@ def run_parallel_exploration(exp_type):
     df_summary = df_summary.rename(columns=rename_dict)
 
     # save
+    os.makedirs(exploration_dir, exist_ok=True)
     raw_file = os.path.join(exploration_dir, f"{exp_type}_raw.pkl")
     summary_file = os.path.join(exploration_dir, f"{exp_type}_summary.pkl")
     raw_csv = os.path.join(exploration_dir, f"{exp_type}_raw.csv")
@@ -164,9 +165,7 @@ def main():
     print("Start")
     start_time = time.time()
     alpha_summary = run_parallel_exploration('alpha')
-    '''
     vdist_summary = run_parallel_exploration('v_dist')
-    '''
     optimal_params = analyze_optimal_params()
 
     params_file = os.path.join(exploration_dir, "optimal_params.txt")
@@ -176,10 +175,8 @@ def main():
 
         f.write(f"alpha_opt_cond = {optimal_params['alpha_cond']}\n")
         f.write(f"alpha_opt_uncond = {optimal_params['alpha_uncond']}\n")
-        '''
         f.write(f"v_dist_opt_cond = '{optimal_params['v_dist_cond']}'\n")
         f.write(f"v_dist_opt_uncond = '{optimal_params['v_dist_uncond']}'\n")
-        '''
     print(f"\nsave to {params_file}")
 
     total_time = time.time() - start_time
